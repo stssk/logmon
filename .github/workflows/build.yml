@@ -31,14 +31,9 @@ jobs:
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o build/${{ matrix.goos }}-${{ matrix.goarch }}/logmon
         fi
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: |
-          build/${{ matrix.goos }}-${{ matrix.goarch }}/logmon*
-        asset_name: |
-          logmon-${{ matrix.goos }}-${{ matrix.goarch }}-${{ matrix.goos == 'windows' && 'logmon.exe' || 'logmon' }}
-        asset_content_type: application/octet-stream
+        files: build/${{ matrix.goos }}-${{ matrix.goarch }}/logmon*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
