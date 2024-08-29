@@ -141,8 +141,8 @@ func main() {
 	if *dir == "" {
 		log.Fatal("Please provide a directory to watch using the -dir flag")
 	}
-	if !strings.HasSuffix(*dir, "/") {
-		*dir += "/"
-	}
+
+	*dir = filepath.Clean(*dir) + string(os.PathSeparator)
+
 	watchDir(*dir)
 }
