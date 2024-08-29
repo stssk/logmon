@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -20,7 +21,7 @@ var (
 )
 
 func newOffset(file *os.File) int64 {
-	newOffset, _ := file.Seek(0, os.SEEK_CUR)
+	newOffset, _ := file.Seek(0, io.SeekCurrent)
 	return newOffset
 }
 
@@ -29,7 +30,7 @@ func processFile(filePath string) {
 	offset := fileOffsets[filePath]
 	mu.Unlock()
 
-	file, err := os.Open(filePath)
+	file, err := os.OpenFile(filePath, os.O_RDONLY, 0)
 	if err != nil {
 		log.Println("error:", err)
 		return
