@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         goos: [linux, windows, darwin]
-        goarch: [amd64]
+        goarch: [amd64, arm64]
 
     steps:
     - name: Checkout code
@@ -23,7 +23,11 @@ jobs:
     - name: Build
       run: |
         mkdir -p build
-        GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o build/logmon-${{ matrix.goos }}-${{ matrix.goarch }}
+        if [ "${{ matrix.goos }}" == "windows" ]; then
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o build/logmon-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+        else
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o build/logmon-${{ matrix.goos }}-${{ matrix.goarch }}
+        fi
 
     - name: Upload Release Assets
       run: |
