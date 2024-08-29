@@ -22,15 +22,11 @@ jobs:
 
     - name: Build
       run: |
-        mkdir -p build/${{ matrix.goos }}-${{ matrix.goarch }}
-        if [ "${{ matrix.goos }}" == "windows" ]; then
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o build/${{ matrix.goos }}-${{ matrix.goarch }}/logmon.exe
-        else
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o build/${{ matrix.goos }}-${{ matrix.goarch }}/logmon
-        fi
+        mkdir -p build
+        GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o build/logmon-${{ matrix.goos }}-${{ matrix.goarch }}
 
     - name: Upload Release Assets
       run: |
-        gh release upload ${{ github.event.release.tag_name }} build/${{ matrix.goos }}-${{ matrix.goarch }}/logmon* --clobber
+        gh release upload ${{ github.event.release.tag_name }} build/logmon-${{ matrix.goos }}-${{ matrix.goarch }}* --clobber
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
