@@ -32,8 +32,13 @@ jobs:
         fi
 
     - name: Upload Release Asset
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-release-asset@v1
       with:
-        name: logmon-${{ matrix.goos }}-${{ matrix.goarch }}
-        path: |
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: |
           build/${{ matrix.goos }}-${{ matrix.goarch }}/logmon*
+        asset_name: |
+          logmon-${{ matrix.goos }}-${{ matrix.goarch }}-${{ matrix.goos == 'windows' && 'logmon.exe' || 'logmon' }}
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
