@@ -30,7 +30,7 @@ func processFile(filePath string) {
 	offset := fileOffsets[filePath]
 	mu.Unlock()
 
-	file, err := openFileReadOnly(filePath)
+	file, err := os.OpenFile(filePath, os.O_RDONLY, 0444)
 	if err != nil {
 		log.Println("error:", err)
 		return
@@ -61,7 +61,7 @@ func updateOffset(filePath string, offset int64) {
 func handleFileEvent(event fsnotify.Event) {
 	if event.Op&fsnotify.Create == fsnotify.Create || event.Op&fsnotify.Write == fsnotify.Write {
 		if debug {
-			log.Println("file event:", event.Name)
+			log.Println(event.Op, event.Name)
 		}
 		processFile(event.Name)
 	}
